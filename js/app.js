@@ -3,7 +3,7 @@ const CLUBS=14,PENALTY=14,MAX=4,KEY='golf_tracker_phase7',LONG=800;
 const MEMBER_COLORS=[{dark:'#2e7d32',light:'#c8e6c9',summary:'#eef7ee'},{dark:'#1565c0',light:'#d9eaff',summary:'#f0f6fd'},{dark:'#ef6c00',light:'#ffe4c7',summary:'#fff4e8'},{dark:'#7b1fa2',light:'#ead7f2',summary:'#f7effa'}];
 const cols=[...Array.from({length:9},(_,i)=>({t:'h',h:i})),{t:'s',k:'out',l:'OUT'},...Array.from({length:9},(_,i)=>({t:'h',h:i+9})),{t:'s',k:'in',l:'IN'},{t:'s',k:'total',l:'TOTAL'}];
 const player=n=>({name:n,names:Array.from({length:CLUBS},(_,i)=>`クラブ${i+1}`),yards:Array(CLUBS).fill(''),visible:Array(CLUBS).fill(true),scores:Array.from({length:18},()=>Array(15).fill(0)),notes:Array(18).fill('')});
-let st={date:'',course:'',par:Array(18).fill(4),locks:Array(18).fill(false),active:0,players:[player('あなた')]},settingsPlayer=0,FmemoHole=null;
+let st={date:'',course:'',par:Array(18).fill(4),locks:Array(18).fill(false),active:0,players:[player('あなた')]},settingsPlayer=0,memoHole=null;
 addEventListener('DOMContentLoaded',()=>{load();common();tabs();head();body();bind();calc();setTimeout(()=>{$('app').classList.add('show');$('splash').classList.add('hide')},2000)});
 const today=()=>{const n=new Date();return new Date(n-n.getTimezoneOffset()*60000).toISOString().slice(0,10)};
 function common(){const d=$('round-date'),c=$('course-name');d.value=st.date||today();c.value=st.course;d.onchange=save;c.oninput=save}
@@ -13,7 +13,71 @@ function rename(i){const n=prompt('名前変更。空欄で削除',st.players[i]
 function head(){const a=document.createElement('tr');a.className='hole-row';a.append(el('th','クラブ名','label'));cols.forEach(c=>{const x=el('th',c.t==='h'?(st.locks[c.h]?`🔒 ${c.h+1}H`:`${c.h+1}H`):c.l,c.t==='s'?'summary':'');if(c.t==='h'){x.classList.add('hole-head');x.dataset.lockHole=c.h;bindHoleLock(x,c.h)}a.append(x)});const b=document.createElement('tr');b.className='par-row';b.append(el('th','Par','label'));cols.forEach(c=>{if(c.t==='s'){const x=el('td','','summary');x.id=`par-${c.k}`;b.append(x)}else{const td=document.createElement('td'),s=document.createElement('select');td.className='par-hole';td.dataset.parHole=c.h;s.className='par-select';s.disabled=!!st.locks[c.h];for(let v=3;v<=7;v++){const o=el('option',v);o.value=v;o.selected=v===st.par[c.h];s.append(o)}s.onchange=()=>{if(st.locks[c.h])return;st.par[c.h]=+s.value;calc();save()};td.append(s);b.append(td)}});$('table-head').replaceChildren(a,b);updateLockUI()}
 function body(){const p=st.players[st.active],f=document.createDocumentFragment();for(let i=0;i<CLUBS;i++){const r=document.createElement('tr');r.className='club-row'+(p.visible[i]?'':' hidden-row');const th=el('th','','label'),info=el('div','','info'),n=document.createElement('input');n.className='club-name';n.value=p.names[i];n.oninput=()=>{p.names[i]=n.value;save()};const line=el('div','','distance'),d=document.createElement('input');d.type='number';d.inputMode='numeric';d.className='club-distance';d.placeholder='---';d.value=p.yards[i];d.oninput=()=>{d.value=d.value.replace(/\D/g,'').slice(0,3);p.yards[i]=d.value;save()};line.append(d,document.createTextNode('yd'));info.append(n,line);th.append(info);r.append(th);cols.forEach(c=>r.append(c.t==='h'?counter(c.h,i):sumCell(`club-${i}-${c.k}`)));f.append(r)}f.append(penRow(),calcRow('合計','total-row','total'),calcRow('±','diff-row','diff'));$('table-body').replaceChildren(f);updateLockUI()}
 function penRow(){const r=document.createElement('tr');r.className='penalty-row';r.append(el('th','ペナルティー','label'));cols.forEach(c=>r.append(c.t==='h'?counter(c.h,PENALTY):sumCell(`penalty-${c.k}`)));return r}function calcRow(l,cl,p){const r=document.createElement('tr');r.className=cl;r.append(el('th',l,'label'));cols.forEach(c=>{const cell=sumCell(c.t==='h'?`${p}-${c.h}`:`${p}-${c.k}`);if(p==='total'&&c.t==='h'){cell.classList.add('total-note');cell.dataset.noteHole=c.h;cell.onclick=()=>openMemo(c.h)}r.append(cell)});return r}function sumCell(id){const x=el('td','0','summary');x.id=id;return x}
-function counter(h,i){const x=el('td','','counter');x.dataset.h=h;x.dataset.i=i;x.dataset.scoreHole=h;let t,long=false;const clear=()=>{clearTimeout(t);t=null};x.onpointerdown=()=>{long=false;t=setTimeout(()=>{long=true;change(h,i,-1)},LONG)};x.onpointerup=()=>{if(t&&!long)change(h,i,1);clear()};x.onpointercancel=clear;x.oncontextmenu=e=>e.preventDefault();show(x,h,i);return x}function change(h,i,a){if(st.locks[h])return;const p=st.players[st.active],before=p.scores[h][i],after=Math.max(0,before+a),cell=document.querySelector(`[data-h="${h}"][data-i="${i}"]`);p.scores[h][i]=after;show(cell,h,i);if(after!==before)flashCell(cell,a>0?'flash-add':'flash-subtract');calc();save();tabs()}function show(x,h,i){const v=st.players[st.active].scores[h][i];x.textContent=i===PENALTY?String(v):v||''}
+
+function counter(h,i){
+
+    const x = el('td','','counter');
+
+    x.dataset.h = h;
+    x.dataset.i = i;
+    x.dataset.scoreHole = h;
+
+    let t = null;
+    let long = false;
+
+    let startX = 0;
+    let startY = 0;
+    let moved = false;
+
+    const clear = () => {
+        clearTimeout(t);
+        t = null;
+    };
+
+    x.onpointerdown = (e) => {
+
+        moved = false;
+
+        startX = e.clientX;
+        startY = e.clientY;
+
+        long = false;
+
+        t = setTimeout(() => {
+            long = true;
+            change(h,i,-1);
+        }, LONG);
+    };
+
+    x.onpointermove = (e) => {
+
+        const dx = Math.abs(e.clientX - startX);
+        const dy = Math.abs(e.clientY - startY);
+
+        if(dx > 10 || dy > 10){
+            moved = true;
+            clear();
+        }
+    };
+
+    x.onpointerup = () => {
+
+        if(!moved && t && !long){
+            change(h,i,1);
+        }
+
+        clear();
+    };
+
+    x.onpointercancel = clear;
+
+    x.oncontextmenu = e => e.preventDefault();
+
+    show(x,h,i);
+
+    return x;
+}
+function change(h,i,a){if(st.locks[h])return;const p=st.players[st.active],before=p.scores[h][i],after=Math.max(0,before+a),cell=document.querySelector(`[data-h="${h}"][data-i="${i}"]`);p.scores[h][i]=after;show(cell,h,i);if(after!==before)flashCell(cell,a>0?'flash-add':'flash-subtract');calc();save();tabs()}function show(x,h,i){const v=st.players[st.active].scores[h][i];x.textContent=i===PENALTY?String(v):v||''}
 function calc(){const s=st.players[st.active].scores;txt('par-out',sum(st.par.slice(0,9)));txt('par-in',sum(st.par.slice(9)));txt('par-total',sum(st.par));for(let i=0;i<CLUBS;i++){const v=s.map(r=>r[i]);txt(`club-${i}-out`,sum(v.slice(0,9)));txt(`club-${i}-in`,sum(v.slice(9)));txt(`club-${i}-total`,sum(v))}const pen=s.map(r=>r[PENALTY]);txt('penalty-out',sum(pen.slice(0,9)));txt('penalty-in',sum(pen.slice(9)));txt('penalty-total',sum(pen));const ts=s.map(sum),used=ts.map(Boolean);ts.forEach((v,i)=>{txt(`total-${i}`,used[i]?v:'');setDiff(`diff-${i}`,used[i]?v-st.par[i]:null)});const o=sum(ts.slice(0,9)),n=sum(ts.slice(9)),hasOut=used.slice(0,9).some(Boolean),hasIn=used.slice(9).some(Boolean),op=st.par.slice(0,9).reduce((a,v,i)=>a+(used[i]?v:0),0),np=st.par.slice(9).reduce((a,v,i)=>a+(used[i+9]?v:0),0);txt('total-out',hasOut?o:'');txt('total-in',hasIn?n:'');txt('total-total',hasOut||hasIn?o+n:'');setDiff('diff-out',hasOut?o-op:null);setDiff('diff-in',hasIn?n-np:null);setDiff('diff-total',hasOut||hasIn?o+n-op-np:null);updateNoteMarkers()}
 function bindHoleLock(cell,hole){let timer=null,startX=0,startY=0;const clear=()=>{if(timer!==null)clearTimeout(timer);timer=null};cell.onpointerdown=e=>{startX=e.clientX;startY=e.clientY;timer=setTimeout(()=>{timer=null;toggleHoleLock(hole,cell)},LONG)};cell.onpointermove=e=>{if(Math.abs(e.clientX-startX)>10||Math.abs(e.clientY-startY)>10)clear()};cell.onpointerup=clear;cell.onpointercancel=clear;cell.oncontextmenu=e=>e.preventDefault()}function toggleHoleLock(hole,cell){st.locks[hole]=!st.locks[hole];save();cell.classList.add('lock-flash');setTimeout(()=>{head();body();calc()},240)}function updateLockUI(){document.querySelectorAll('[data-lock-hole]').forEach(x=>x.classList.toggle('locked-hole',!!st.locks[+x.dataset.lockHole]));document.querySelectorAll('[data-par-hole]').forEach(x=>x.classList.toggle('locked-hole',!!st.locks[+x.dataset.parHole]));document.querySelectorAll('[data-score-hole]').forEach(x=>x.classList.toggle('locked-hole',!!st.locks[+x.dataset.scoreHole]))}
 function openSettings(){closePanels();settingsPlayer=st.active;renderSettings();$('overlay').hidden=false;$('settings').hidden=false}function renderSettings(){const t=$('settings-tabs');t.replaceChildren();st.players.forEach((p,i)=>{const b=el('button',p.name,'settings-player'+(i===settingsPlayer?' active':''));b.onclick=()=>{settingsPlayer=i;renderSettings()};t.append(b)});const list=$('club-list'),p=st.players[settingsPlayer];list.replaceChildren();for(let i=0;i<CLUBS;i++){const row=el('label','','club-setting'),c=document.createElement('input');c.type='checkbox';c.checked=p.visible[i];c.onchange=()=>{p.visible[i]=c.checked;save();if(settingsPlayer===st.active){body();calc()}};row.append(c,document.createTextNode(p.names[i]||`クラブ${i+1}`));list.append(row)}}
