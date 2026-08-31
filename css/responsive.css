@@ -1,0 +1,117 @@
+/* =====================================================
+   Smartphone Layout
+   Pixel 9a / iPhone 15 Pro Max 最適化
+   ===================================================== */
+
+@media (max-width:600px){
+
+    :root{
+        --label:100px;
+        --hole:55px;
+    }
+
+    .top,
+    .member-bar,
+    .table-wrap{
+        width:calc(100% - 8px);
+        margin:0 4px;
+    }
+
+    .top{
+        padding:6px;
+        margin-bottom:4px;
+    }
+
+    .member-bar{
+        padding:6px;
+        margin-bottom:4px;
+    }
+
+    .field{
+        height:50px;
+        font-size:18px;
+    }
+
+    .date{
+        flex:0 0 140px;
+        width:140px;
+        height:50px;
+    }
+
+    .course{
+        flex:1 1 auto;
+        min-width:120px;
+        max-width:none;
+        height:50px;
+    }
+
+    .menu-button{
+        flex:0 0 50px;
+        height:50px;
+        font-size:28px;
+    }
+
+    .member-tab{
+        min-width:110px;
+        height:46px;
+        font-size:16px;
+        border-radius:23px;
+        padding:0 10px;
+    }
+
+    .add-member{
+        min-width:46px;
+        width:46px;
+        height:46px;
+        font-size:24px;
+    }
+
+    th,
+    td{
+        height:70px;
+        font-size:18px;
+    }
+
+    .hole-row > *{
+        height:42px;
+        font-size:12px;
+    }
+
+    .par-row > *{
+        height:44px;
+    }
+
+    .club-name{
+        font-size:15px;
+    }
+
+    .distance{
+        gap:4px;
+        font-size:12px;
+    }
+
+    .club-distance{
+        width:50px;
+        height:24px;
+        font-size:12px;
+    }
+
+    .par-select{
+        width:42px;
+        height:28px;
+        font-size:14px;
+    }
+
+    .counter{
+        font-size:18px;
+    }
+
+    .penalty-row > *{
+        height:70px;
+    }
+
+    .total-row > *,
+    .diff-row > *{
+        height:40px;
+    }
+}
