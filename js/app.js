@@ -24,22 +24,22 @@ function counter(h,i){
 
     let t = null;
     let long = false;
+    let moved = false;
 
     let startX = 0;
     let startY = 0;
-    let moved = false;
 
     const clear = () => {
         clearTimeout(t);
         t = null;
     };
 
-    x.onpointerdown = (e) => {
+    x.addEventListener('touchstart', (e) => {
 
         moved = false;
 
-        startX = e.clientX;
-        startY = e.clientY;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
 
         long = false;
 
@@ -47,29 +47,37 @@ function counter(h,i){
             long = true;
             change(h,i,-1);
         }, LONG);
-    };
 
-    x.onpointermove = (e) => {
+    }, { passive:true });
 
-        const dx = Math.abs(e.clientX - startX);
-        const dy = Math.abs(e.clientY - startY);
+    x.addEventListener('touchmove', (e) => {
 
-        if(dx > 10 || dy > 10){
+        const dx = Math.abs(
+            e.touches[0].clientX - startX
+        );
+
+        const dy = Math.abs(
+            e.touches[0].clientY - startY
+        );
+
+        if(dx > 8 || dy > 8){
             moved = true;
             clear();
         }
-    };
 
-    x.onpointerup = () => {
+    }, { passive:true });
+
+    x.addEventListener('touchend', () => {
 
         if(!moved && t && !long){
             change(h,i,1);
         }
 
         clear();
-    };
 
-    x.onpointercancel = clear;
+    });
+
+    x.addEventListener('touchcancel', clear);
 
     x.oncontextmenu = e => e.preventDefault();
 
@@ -77,6 +85,7 @@ function counter(h,i){
 
     return x;
 }
+
 function change(h,i,a){if(st.locks[h])return;const p=st.players[st.active],before=p.scores[h][i],after=Math.max(0,before+a),cell=document.querySelector(`[data-h="${h}"][data-i="${i}"]`);p.scores[h][i]=after;show(cell,h,i);if(after!==before)flashCell(cell,a>0?'flash-add':'flash-subtract');calc();save();tabs()}function show(x,h,i){const v=st.players[st.active].scores[h][i];x.textContent=i===PENALTY?String(v):v||''}
 function calc(){const s=st.players[st.active].scores;txt('par-out',sum(st.par.slice(0,9)));txt('par-in',sum(st.par.slice(9)));txt('par-total',sum(st.par));for(let i=0;i<CLUBS;i++){const v=s.map(r=>r[i]);txt(`club-${i}-out`,sum(v.slice(0,9)));txt(`club-${i}-in`,sum(v.slice(9)));txt(`club-${i}-total`,sum(v))}const pen=s.map(r=>r[PENALTY]);txt('penalty-out',sum(pen.slice(0,9)));txt('penalty-in',sum(pen.slice(9)));txt('penalty-total',sum(pen));const ts=s.map(sum),used=ts.map(Boolean);ts.forEach((v,i)=>{txt(`total-${i}`,used[i]?v:'');setDiff(`diff-${i}`,used[i]?v-st.par[i]:null)});const o=sum(ts.slice(0,9)),n=sum(ts.slice(9)),hasOut=used.slice(0,9).some(Boolean),hasIn=used.slice(9).some(Boolean),op=st.par.slice(0,9).reduce((a,v,i)=>a+(used[i]?v:0),0),np=st.par.slice(9).reduce((a,v,i)=>a+(used[i+9]?v:0),0);txt('total-out',hasOut?o:'');txt('total-in',hasIn?n:'');txt('total-total',hasOut||hasIn?o+n:'');setDiff('diff-out',hasOut?o-op:null);setDiff('diff-in',hasIn?n-np:null);setDiff('diff-total',hasOut||hasIn?o+n-op-np:null);updateNoteMarkers()}
 function bindHoleLock(cell,hole){let timer=null,startX=0,startY=0;const clear=()=>{if(timer!==null)clearTimeout(timer);timer=null};cell.onpointerdown=e=>{startX=e.clientX;startY=e.clientY;timer=setTimeout(()=>{timer=null;toggleHoleLock(hole,cell)},LONG)};cell.onpointermove=e=>{if(Math.abs(e.clientX-startX)>10||Math.abs(e.clientY-startY)>10)clear()};cell.onpointerup=clear;cell.onpointercancel=clear;cell.oncontextmenu=e=>e.preventDefault()}function toggleHoleLock(hole,cell){st.locks[hole]=!st.locks[hole];save();cell.classList.add('lock-flash');setTimeout(()=>{head();body();calc()},240)}function updateLockUI(){document.querySelectorAll('[data-lock-hole]').forEach(x=>x.classList.toggle('locked-hole',!!st.locks[+x.dataset.lockHole]));document.querySelectorAll('[data-par-hole]').forEach(x=>x.classList.toggle('locked-hole',!!st.locks[+x.dataset.parHole]));document.querySelectorAll('[data-score-hole]').forEach(x=>x.classList.toggle('locked-hole',!!st.locks[+x.dataset.scoreHole]))}
