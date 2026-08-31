@@ -1,0 +1,140 @@
+
+:root{--member-dark:#2e7d32;--member-light:#c8e6c9;--member-summary-light:#eef7ee;--blue:#81c784;--green:#4f9f45;--line:#9ccc65;--head:#81c784;--par:#b3e5fc;--sum:#fff8c4;--label:220px;--hole:135px;--hh:64px}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--green);font-family:Arial,sans-serif;color:#333;user-select:none}.splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#fff;transition:opacity .8s,visibility 0s linear .8s}.splash.hide{opacity:0;visibility:hidden}.splash-title{position:relative;display:flex;flex-direction:column;align-items:flex-start;font-size:52px;font-weight:700;letter-spacing:.08em}.splash-name{display:block}.splash-subtitle{display:flex;flex-direction:column;align-items:flex-start;margin-top:24px;font-size:24px;line-height:1.55;font-weight:600;letter-spacing:.03em;text-align:left;color:#355b3b}.splash-subtitle span{display:block}.version{position:absolute;right:0;bottom:-30px;font-size:17px}.app{height:100dvh;padding:8px;display:flex;flex-direction:column;opacity:0;transition:opacity .8s}.app.show{opacity:1}.top,.member-bar,.table-wrap{width:calc(100% - 24px);margin:0 12px}.top{background:var(--blue);border-radius:10px;padding:10px 14px;margin-bottom:8px}.topline{display:flex;align-items:center;gap:8px;overflow-x:auto}.field{height:70px;background:#fff;font-size:30px;font-weight:700;white-space:nowrap}.date{flex:0 0 265px;width:265px;border:2px solid #ccc;border-radius:8px;padding:8px 12px;color:#0782bd}.course{flex:1 1 420px;width:auto;min-width:240px;max-width:480px;border:2px solid #ccc;border-radius:8px;padding:8px 12px}.menu-button{margin-left:auto;flex:0 0 70px;height:70px;border:0;background:transparent;color:#777;font-size:40px}.member-bar{background:#e8f5e9;border-radius:10px;padding:8px;margin-bottom:8px}.member-tabs{display:flex;gap:8px;overflow-x:auto}.member-tab,.add-member{flex:0 0 auto;min-width:180px;height:68px;border:2px solid #66bb6a;border-radius:34px;background:#fff;color:#1b5e20;font-size:25px;font-weight:700;padding:0 18px}.member-tab{border-color:var(--tab-dark,#66bb6a);color:var(--tab-dark,#1b5e20)}.member-tab.active{background:var(--tab-dark,#2e7d32);border-color:var(--tab-dark,#2e7d32);color:#fff}.add-member{min-width:68px;padding:0;font-size:34px}.table-wrap{flex:1;min-height:0;overflow:auto;border-radius:8px;overscroll-behavior:contain}table{border-collapse:separate;border-spacing:0;table-layout:fixed;width:max-content;min-width:100%}th,td{width:var(--hole);min-width:var(--hole);height:130px;padding:0;text-align:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:34px;font-weight:700;background:#f7f6f1}tr>:first-child{border-left:1px solid var(--line)}.hole-row>*{position:sticky;top:0;z-index:30;height:var(--hh);background:var(--head);color:#222;font-size:24px}.par-row>*{position:sticky;top:var(--hh);z-index:29;height:72px;background:var(--par)}.label{position:sticky;left:0;z-index:20;width:var(--label)!important;min-width:var(--label)!important;background:var(--member-light);color:var(--member-dark)}.hole-row .label{z-index:50;background:var(--member-dark);color:#fff;font-size:22px;white-space:nowrap}.par-row .label{z-index:49;background:var(--par);color:#0277bd}.info{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}.club-name{width:92%;border:0;background:transparent;text-align:center;font-size:34px;font-weight:700}.distance{display:flex;align-items:center;gap:7px;font-size:19px}.club-distance{width:92px;height:42px;padding:2px 6px;border:1px solid #999;border-radius:7px;background:#fff;text-align:center;font-size:21px;font-weight:700}.club-distance::-webkit-inner-spin-button,.club-distance::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.par-select{width:86px;height:48px;border:1px solid #66bb6a;border-radius:24px;background:#fff;color:#1b5e20;text-align:center;font-size:27px;font-weight:700}.summary{background:var(--member-summary-light)!important;color:#000}.total-row td{background:#dbeeff!important;color:#0d47a1}.diff-row td{background:#fff!important;color:#000}.diff-row td.diff-under{background:#dbeeff!important;color:#0d47a1}.diff-row td.diff-over{background:#fde1e1!important;color:#b71c1c}.diff-row td.diff-even{background:#fff!important;color:#000}tr>:last-child{position:sticky;right:0;z-index:24;box-shadow:-4px 0 6px #0002}.hole-row>:last-child{position:sticky;top:0;right:0;z-index:70;background:var(--head)!important;color:#000!important;box-shadow:-4px 0 6px #0002}.par-row>:last-child{position:sticky;top:var(--hh);right:0;z-index:69;background:var(--par)!important;color:#000!important;box-shadow:-4px 0 6px #0002}.hole-row .summary{background:var(--head)!important;color:#000!important}.par-row .summary{background:var(--par)!important;color:#000!important}.member-tab,.counter,.hole-row th{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.counter{font-size:36px;color:#222;touch-action:manipulation;transition:background-color .24s ease,transform .24s ease}.counter.flash-add{background:#dff5df!important;transform:scale(.97)}.counter.flash-subtract{background:#ffe6c7!important;transform:scale(.97)}.hole-head{touch-action:pan-x;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.hole-head.lock-flash{filter:brightness(1.22);transform:scale(.97)}.hole-head.locked-hole{background:#777!important;color:#fff!important}.par-hole.locked-hole{background:#e1e1e1!important}.par-hole.locked-hole .par-select{background:#ddd;color:#777;border-color:#aaa}.counter.locked-hole{background:#ededed!important;color:#555!important;pointer-events:none}.locked-hole{transition:background-color .24s ease,filter .24s ease,transform .24s ease}.penalty-row>*{height:120px}.penalty-row td,.penalty-row .label{color:#d32f2f}.total-row>*,.diff-row>*{height:65px}.club-row.hidden-row>*{background:#d6d6d6!important;color:#888!important}.club-row.hidden-row .club-name,.club-row.hidden-row .distance{visibility:hidden}.club-row.hidden-row .counter{pointer-events:none}.overlay{position:fixed;inset:0;z-index:900;background:#0004}.action-menu{position:fixed;top:92px;right:20px;z-index:901;width:min(92vw,480px);padding:10px;border-radius:14px;background:#fff;box-shadow:0 8px 28px #0005}.menu-item{display:block;width:100%;min-height:88px;padding:17px 20px;border:0;background:#fff;text-align:left;font-size:36px;line-height:1.3;font-weight:700;letter-spacing:.03em}.danger{color:#c62828}.menu-divider{height:1px;margin:8px 10px;background:#cfcfcf}.settings,.help,.version-panel,.memo-panel{position:fixed;top:5%;left:50%;z-index:902;max-height:90vh;transform:translateX(-50%);background:#fff;border-radius:18px;padding:16px;overflow:auto;box-shadow:0 10px 34px #0005}.settings,.help,.version-panel,.memo-panel{width:min(97vw,820px)}.version-panel{top:12%;text-align:center}.memo-panel{top:10%}.settings h2{margin:0 0 12px;font-size:30px;text-align:center}.help h2,.version-panel h2{margin:0 0 14px;font-size:36px;text-align:center}.memo-panel h2{margin:0 0 14px;font-size:38px;text-align:center}.settings-tabs{display:flex;gap:8px;overflow:auto;margin-bottom:12px}.settings-player{min-height:54px;padding:10px 18px;border:1px solid #66bb6a;border-radius:27px;background:#fff;font-size:22px;font-weight:700}.settings-player.active{background:#2e7d32;color:#fff}.club-setting{display:flex;align-items:center;gap:16px;min-height:82px;padding:14px 16px;border-bottom:1px solid #ddd;font-size:27px;font-weight:700;line-height:1.5}.club-setting input{width:32px;height:32px}.basic-guide{margin:8px 0 16px;padding:12px 16px;border-radius:12px;background:#f4f7f2}.basic-guide h3{margin:0 0 10px;font-size:32px;color:#1b5e20}.basic-grid{display:grid;grid-template-columns:minmax(210px,1fr) 1.25fr;gap:9px 18px;font-size:30px;line-height:1.6}.accordion{margin:8px 0;border:1px solid #d7ddd5;border-radius:11px;overflow:hidden}.accordion summary{padding:15px 17px;background:#e8f5e9;color:#1b5e20;font-size:32px;font-weight:700;cursor:pointer;list-style:none}.accordion summary::-webkit-details-marker{display:none}.accordion summary::before{content:"▶";display:inline-block;width:1.2em}.accordion[open] summary::before{content:"▼"}.accordion.caution summary{background:#fff3cd;color:#6d4c00}.accordion-body{padding:8px 16px 12px}.help p,.help li{font-size:29px;line-height:1.65}.help ol,.help ul{margin:5px 0;padding-left:34px}.help strong{font-size:31px;color:#1b5e20}.version-meta{margin:12px 0;font-size:30px;font-weight:700}.version-description{margin:20px auto;max-width:500px;font-size:28px;line-height:1.65}.copyright{margin:20px 0 6px;font-size:24px;line-height:1.6;color:#555}.memo-note{margin:8px 0 14px;padding:12px 14px;border-radius:10px;background:#f4f7f2;font-size:28px;line-height:1.65}.memo-text{width:100%;min-height:200px;padding:14px;border:2px solid #a5b8a2;border-radius:12px;font-size:31px;line-height:1.6;resize:vertical;user-select:text;-webkit-user-select:text}.memo-count{text-align:right;margin:8px 2px 14px;font-size:25px;color:#555}.memo-actions{display:flex;gap:12px}.memo-actions button{flex:1;height:70px;border:0;border-radius:35px;font-size:29px;font-weight:700}.memo-delete{background:#efefef;color:#b71c1c}.memo-save{background:#2e7d32;color:#fff}.total-note{position:relative;cursor:pointer}.total-note.has-note::after{content:"";position:absolute;top:8px;right:9px;width:12px;height:12px;border-radius:50%;background:#d6a522;box-shadow:0 0 0 2px #fff8}.close-panel{position:sticky;bottom:0;width:100%;height:64px;margin-top:14px;border:0;border-radius:32px;background:#2e7d32;color:#fff;font-size:25px;font-weight:700}
+/* =====================================================
+   Responsive Layout
+   Pixel 9a / iPhone 15 Pro Max 対応
+   ===================================================== */
+
+@media (max-width: 600px){
+
+    :root{
+        --label:140px;
+        --hole:80px;
+    }
+
+    .top,
+    .member-bar,
+    .table-wrap{
+        width:calc(100% - 12px);
+        margin:0 6px;
+    }
+
+    .top{
+        padding:8px;
+    }
+
+    .field{
+        font-size:22px;
+    }
+
+    .date{
+        flex:0 0 45%;
+        width:auto;
+        height:60px;
+    }
+
+    .course{
+        flex:1 1 auto;
+        min-width:120px;
+        max-width:none;
+        height:60px;
+    }
+
+    .menu-button{
+        flex:0 0 60px;
+        height:60px;
+        font-size:34px;
+    }
+
+    .member-tab{
+        min-width:150px;
+        height:58px;
+        font-size:20px;
+    }
+
+    .add-member{
+        min-width:58px;
+        height:58px;
+        font-size:28px;
+    }
+
+    th,
+    td{
+        height:90px;
+        font-size:24px;
+    }
+
+    .hole-row > *{
+        font-size:16px;
+    }
+
+    .par-row > *{
+        height:60px;
+    }
+
+    .club-name{
+        font-size:22px;
+    }
+
+    .distance{
+        font-size:16px;
+    }
+
+    .club-distance{
+        width:72px;
+        height:38px;
+        font-size:18px;
+    }
+
+    .par-select{
+        width:58px;
+        height:38px;
+        font-size:18px;
+    }
+
+    .counter{
+        font-size:26px;
+    }
+
+    .penalty-row > *{
+        height:90px;
+    }
+
+    .total-row > *,
+    .diff-row > *{
+        height:52px;
+    }
+
+    .menu-item{
+        min-height:72px;
+        font-size:26px;
+    }
+
+    .settings h2,
+    .help h2,
+    .version-panel h2,
+    .memo-panel h2{
+        font-size:28px;
+    }
+
+    .help p,
+    .help li,
+    .version-description,
+    .memo-note{
+        font-size:20px;
+    }
+
+    .basic-guide h3{
+        font-size:24px;
+    }
+
+    .basic-grid{
+        grid-template-columns:1fr;
+        font-size:20px;
+    }
+
+    .close-panel{
+        height:54px;
+        font-size:20px;
+    }
+}
